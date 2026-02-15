@@ -1,7 +1,7 @@
 class_name PhysicalPiece extends Node
 
 enum Pieces {
-	None = 0,
+	Empty = 0,
 	King = 1,
 	Queen = 2,
 	Bishop = 3,
