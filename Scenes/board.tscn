@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1bkjj6xh2wks"]
+
+[ext_resource type="Script" uid="uid://cspf06jsxdc5e" path="res://Scriptures/board.gd" id="1_tnbny"]
+
+[node name="Board" type="Node2D"]
+script = ExtResource("1_tnbny")
+
+[node name="Camera2D" type="Camera2D" parent="."]

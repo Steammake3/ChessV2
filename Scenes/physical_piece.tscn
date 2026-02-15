@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdmq53tcjk5sw"]
+
+[ext_resource type="Script" uid="uid://nrhi8yfgjl0w" path="res://Scriptures/physical_piece.gd" id="1_eskfv"]
+[ext_resource type="Texture2D" uid="uid://cd3g2bjbhpfnv" path="res://Pieces/white/pawn.png" id="2_eixs1"]
+
+[node name="PhysicalPiece" type="Node2D"]
+script = ExtResource("1_eskfv")
+
+[node name="PieceImg" type="Sprite2D" parent="."]
+texture = ExtResource("2_eixs1")
