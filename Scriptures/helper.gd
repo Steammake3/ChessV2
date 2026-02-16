@@ -4,7 +4,7 @@ const Pieces = PhysicalPiece.Pieces
 
 static func pgn_to_index(coord = "a1"):
 	const tis = "abcdefgh"
-	return (int(coord[1])-1)*8 + tis.find(coord[0].lower())
+	return (int(coord[1])-1)*8 + tis.find(coord[0].to_lower())
 
 static func index_to_pgn(index=8):
 	const tis = "abcdefgh"

@@ -6,3 +6,7 @@
 script = ExtResource("1_tnbny")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Areas" type="Node2D" parent="."]
+
+[node name="Pieces" type="Node2D" parent="."]
