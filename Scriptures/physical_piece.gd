@@ -32,7 +32,7 @@ const legal = preload("res://Pieces/legal.png")
 @export_enum("King:1", "Queen:2", "Bishop:3", "Rook:4", "Knight:5", "Pawn:6") var type : int = 6
 @export_enum("White:8", "Black:16") var side : int = 8
 
-var piece = side | type
+var piece : int = side | type
 
 func _process(delta: float) -> void:
 	if not piece&7:

@@ -5,8 +5,6 @@
 
 [node name="PhysicalPiece" type="Node2D"]
 script = ExtResource("1_eskfv")
-type = null
-side = null
 
 [node name="PieceImg" type="Sprite2D" parent="."]
 texture = ExtResource("2_eixs1")

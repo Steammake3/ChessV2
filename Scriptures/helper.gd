@@ -1,4 +1,4 @@
-class_name Helper extends Node
+class_name Helper
 
 const Pieces = PhysicalPiece.Pieces
 
@@ -21,3 +21,6 @@ static func is_white(piece):
 
 static func is_black(piece):
 	return (piece>>3)==2
+
+static func color_of_piece(piece):
+	return Pieces.Black if is_black(piece) else Pieces.White
