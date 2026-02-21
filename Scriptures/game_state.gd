@@ -108,4 +108,44 @@ func repr():
 	return "".join(retfener)
 
 func playmove(move : Move):
+	#TODO : pindeces & normal moves
+	if not is_legal(move): return false
 	emit_signal("position_changed")
+	var start = move.start_sq
+	var end = move.end_sq
+	var promo = move.promo
+	var black_is : bool = Pieces.Black==current_move
+	var explicit_moves : Array[Move] = []
+	
+	match self.board[start]&7:
+		Pieces.King:
+			self.castling_rights &= 0b1100 if black_is else 0b0011
+			if Helper.kingly_dist(start, end)>1: #Castling
+				var kingside : bool = (end-start)>0
+				kingside = kingside != black_is
+				explicit_moves.append(move.cleaned())
+				match int(kingside)*2+int(black_is):
+					0: explicit_moves.append(Move.new(0,3))
+					1: explicit_moves.append(Move.new(56,59))
+					2: explicit_moves.append(Move.new(7,5))
+					3: explicit_moves.append(Move.new(63,61))
+		Pieces.Rook:
+			if start==(63 if black_is else 7): self.castling_rights &= 0b10 << (int(black_is)*2)
+			elif start==(56 if black_is else 0): self.castling_rights &= 0b01 << (int(black_is)*2)
+			explicit_moves.append(move.cleaned())
+		Pieces.Pawn: #Oof this fina be painful
+			if end==self.en_passant:
+				explicit_moves.append(move.cleaned())
+				self.board[end+(8 if black_is else -8)] = Pieces.Empty
+			if (end>>3)==(0 if black_is else 7):
+				_explicitly_move(move.cleaned())
+				const PROMOMAP = [Pieces.Queen, Pieces.Rook, Pieces.Bishop, Pieces.Knight]
+				self.board[end] = PROMOMAP[promo] | self.current_move
+
+func is_legal(move : Move) -> bool:
+	#Add legality logic
+	return true
+
+func _explicitly_move(move : Move):
+	self.board[move.end_sq] = self.board[move.start_sq]
+	self.board[move.start_sq] = Pieces.Empty

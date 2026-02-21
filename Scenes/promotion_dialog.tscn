@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://yxnx0jw6h84q"]
+
+[ext_resource type="Texture2D" uid="uid://40j2eejkjcim" path="res://Pieces/white/queen.png" id="1_h4hd5"]
+[ext_resource type="Script" uid="uid://ct46lur6apasy" path="res://Scriptures/promotion_dialog.gd" id="1_ru8cp"]
+[ext_resource type="Texture2D" uid="uid://bdt4xs14h83qn" path="res://Pieces/white/rook.png" id="2_wdqic"]
+[ext_resource type="Texture2D" uid="uid://uj8ksb8p3v8j" path="res://Pieces/white/bishop.png" id="3_ru8cp"]
+[ext_resource type="Texture2D" uid="uid://bxtp40es05k3a" path="res://Pieces/white/knight.png" id="4_dwa8b"]
+
+[node name="PromotionDialog" type="Node2D"]
+script = ExtResource("1_ru8cp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 150.0
+offset_bottom = 600.0
+size_flags_horizontal = 0
+color = Color(0.435376, 0.804326, 0.698003, 1)
+
+[node name="Options" type="VBoxContainer" parent="."]
+offset_left = 7.5
+offset_top = 18.75
+offset_right = 187.5
+offset_bottom = 768.75
+scale = Vector2(0.75, 0.75)
+size_flags_horizontal = 0
+theme_override_constants/separation = 10
+
+[node name="Queen" type="Button" parent="Options"]
+layout_mode = 2
+tooltip_text = "Queen"
+icon = ExtResource("1_h4hd5")
+icon_alignment = 2
+
+[node name="Rook" type="Button" parent="Options"]
+layout_mode = 2
+tooltip_text = "Rook"
+icon = ExtResource("2_wdqic")
+icon_alignment = 2
+
+[node name="Bishop" type="Button" parent="Options"]
+layout_mode = 2
+tooltip_text = "Bishop"
+icon = ExtResource("3_ru8cp")
+icon_alignment = 2
+
+[node name="Knight" type="Button" parent="Options"]
+layout_mode = 2
+tooltip_text = "Knight"
+icon = ExtResource("4_dwa8b")
+icon_alignment = 2
