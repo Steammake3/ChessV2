@@ -29,14 +29,16 @@ const BP = preload("res://Pieces/black/pawn.png")
 const legal = preload("res://Pieces/legal.png")
 
 @export var board : Board
-@export_enum("King:1", "Queen:2", "Bishop:3", "Rook:4", "Knight:5", "Pawn:6") var type : int = 6
-@export_enum("White:8", "Black:16") var side : int = 8
 
-var piece : int = side | type
+signal piece_change
+var piece : int = 14
+var en_passant_repr := -1
 
-func _process(delta: float) -> void:
-	if not piece&7:
-		self.queue_free()
+func _ready() -> void:
+	piece_change.connect(_piece_changed)
+	piece_change.emit()
+
+func _piece_changed():
 	const texture_mapping = {
 		9 : WK,
 		10 : WQ,
@@ -51,3 +53,8 @@ func _process(delta: float) -> void:
 		21 : BN,
 		22 : BP}
 	$PieceImg.texture = texture_mapping[piece]
+
+func set_piece(pieced):
+	if pieced==piece: return
+	piece=pieced
+	emit_signal("piece_change")

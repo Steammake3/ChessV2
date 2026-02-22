@@ -19,8 +19,12 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and $Hovered.visible and event.pressed:
 			var piece = board.Game.board[pos_]
 			
-			if Helper.is_empty(piece): return
-			if Helper.color_of_piece(piece) != board.Game.current_move: return
+			if Helper.is_empty(piece):
+				board.emit_signal("general_select", pos_)
+				return
+			if Helper.color_of_piece(piece) != board.Game.current_move:
+				board.emit_signal("general_select", pos_)
+				return
 			
 			board.emit_signal("clear_prev_select", pos_)
 			$Selected.visible = not $Selected.visible 

@@ -134,9 +134,9 @@ func playmove(move : Move):
 				explicit_moves.append(move.cleaned())
 				match int(kingside)*2+int(black_is):
 					0: explicit_moves.append(Move.new(0,3))
-					1: explicit_moves.append(Move.new(56,59))
+					3: explicit_moves.append(Move.new(56,59))
 					2: explicit_moves.append(Move.new(7,5))
-					3: explicit_moves.append(Move.new(63,61))
+					1: explicit_moves.append(Move.new(63,61))
 			else: explicit_moves.append(move.cleaned())
 		Pieces.Rook:
 			if start==(63 if black_is else 7): self.castling_rights &= 15-(0b10 << (int(black_is)*2))
@@ -154,6 +154,8 @@ func playmove(move : Move):
 			if abs(end-start)==16: #Double Pawn Push
 				explicit_moves.append(move.cleaned())
 				self.en_passant = start+(-8 if black_is else 8)
+				promod = true
+				promo = 13
 			else: explicit_moves.append(move.cleaned())
 		_:
 			explicit_moves.append(move.cleaned())
@@ -165,9 +167,10 @@ func playmove(move : Move):
 	if explicit_moves:
 		for mov in explicit_moves: _explicitly_move(mov)
 	
-	if promod: self.board[end] = PROMOMAP[promo] | self.current_move
+	if promod:
+		if promo!=13: self.board[end] = PROMOMAP[promo] | self.current_move
 	
-	emit_signal("position_changed", explicit_moves, PROMOMAP[move.promo] if promod else -1)
+	emit_signal("position_changed", explicit_moves, (PROMOMAP[promo] | self.current_move if promo!=13 else 0) if promod else -1)
 	current_move = Pieces.Black if current_move == Pieces.White else Pieces.White
 	return true
 

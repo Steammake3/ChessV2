@@ -6,6 +6,7 @@
 script = ExtResource("1_tnbny")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.67, 0.67)
 
 [node name="Areas" type="Node2D" parent="."]
 
