@@ -37,6 +37,7 @@ func new_tilebase_at(i, j, ts):
 
 func new_piece_at(i, j, ts, scalar = 1) -> PhysicalPiece:
 	var piece := piecer.instantiate() as PhysicalPiece
+	piece.board = self
 	piece.position = Vector2((j-4)*ts+ts/2.0, (3-i)*ts+ts/2.0)
 	piece.name = "At%d" % (8*i+j)
 	piece.scale = Vector2(ts/170.0*scalar, ts/171.0*scalar)
@@ -76,15 +77,16 @@ func _on_position_changed(explicit_moves, promod):
 	elif promod==-1:
 		for move in explicit_moves: move_piece(move)
 	elif promod==0:
-		await move_piece(explicit_moves[0])
+		move_piece(explicit_moves[0])
 		var piece : PhysicalPiece = new_piece_at(int(Game.en_passant / 8.0), Game.en_passant%8, TILE_SIZE, 0.5)
 		piece.name = "AtEP"
 		piece.en_passant_repr = Game.en_passant
-		piece.modulate.a = 0.5
+		piece.modulate.a = 0
 		const Pieces = PhysicalPiece.Pieces
 		piece.set_piece(Pieces.Pawn | (Pieces.Black if Game.en_passant>31 else Pieces.White))
 		piece.rotation  = TAU/2.0
 		$Pieces.add_child(piece)
+		await piece.create_thyself(animation_time)
 
 func _on_select_cleared(post):
 	if post==-1: selection=-1; return

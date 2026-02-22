@@ -33,9 +33,11 @@ const legal = preload("res://Pieces/legal.png")
 signal piece_change
 var piece : int = 14
 var en_passant_repr := -1
+var _internal_ep_counter = 0
 
 func _ready() -> void:
 	piece_change.connect(_piece_changed)
+	board.Game.position_changed.connect(_move_made)
 	piece_change.emit()
 
 func _piece_changed():
@@ -58,3 +60,17 @@ func set_piece(pieced):
 	if pieced==piece: return
 	piece=pieced
 	emit_signal("piece_change")
+
+func _move_made(explicit_moves, promod):
+	if en_passant_repr>=0: _internal_ep_counter+=1
+	if _internal_ep_counter==1: await delete_thyself(board.animation_time)
+
+func delete_thyself(animation_time):
+	var a34 = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN_OUT) \
+		.tween_property(self, "modulate:a", 0, animation_time)
+	await a34.finished
+	self.queue_free()
+
+func create_thyself(animation_time):
+	create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN_OUT) \
+			.tween_property(self, "modulate:a", 0.5, animation_time)
