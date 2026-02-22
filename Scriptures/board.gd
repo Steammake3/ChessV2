@@ -26,7 +26,7 @@ func new_tilebase_at(i, j, ts):
 	var tile := tiler.instantiate() as TileBase
 	tile.position = Vector2((j-4)*ts+ts/2.0, (3-i)*ts+ts/2.0)
 	tile.name = "Tile%d" % (8*i+j)
-	tile.pos = int(8*i+j)
+	tile.pos_ = int(8*i+j)
 	tile.board = self
 	return tile
 

@@ -23,7 +23,7 @@ var halfmove : int = 0
 var fullmove : int = 0
 var pindeces : Array = []
 
-signal position_changed
+signal position_changed(moves, promoted)
 
 func _init(fen):
 	var fields = fen.strip_edges().split(" ")
@@ -108,14 +108,22 @@ func repr():
 	return "".join(retfener)
 
 func playmove(move : Move):
-	#TODO : pindeces & normal moves
 	if not is_legal(move): return false
-	emit_signal("position_changed")
+	
+	const PROMOMAP = [Pieces.Queen, Pieces.Rook, Pieces.Bishop, Pieces.Knight]
+	var promod := false
 	var start = move.start_sq
 	var end = move.end_sq
 	var promo = move.promo
 	var black_is : bool = Pieces.Black==current_move
 	var explicit_moves : Array[Move] = []
+	var old_ep = self.en_passant
+	
+	if Helper.is_piece(self.board[end]):
+		self.halfmove=0
+	else: self.halfmove+=1
+	if black_is: self.fullmove+=1
+	self.en_passant=-1
 	
 	match self.board[start]&7:
 		Pieces.King:
@@ -129,23 +137,50 @@ func playmove(move : Move):
 					1: explicit_moves.append(Move.new(56,59))
 					2: explicit_moves.append(Move.new(7,5))
 					3: explicit_moves.append(Move.new(63,61))
+			else: explicit_moves.append(move.cleaned())
 		Pieces.Rook:
-			if start==(63 if black_is else 7): self.castling_rights &= 0b10 << (int(black_is)*2)
-			elif start==(56 if black_is else 0): self.castling_rights &= 0b01 << (int(black_is)*2)
+			if start==(63 if black_is else 7): self.castling_rights &= 15-(0b10 << (int(black_is)*2))
+			elif start==(56 if black_is else 0): self.castling_rights &= 15-(0b01 << (int(black_is)*2))
 			explicit_moves.append(move.cleaned())
 		Pieces.Pawn: #Oof this fina be painful
-			if end==self.en_passant:
+			self.halfmove=0
+			if end==old_ep: #En passant
 				explicit_moves.append(move.cleaned())
-				self.board[end+(8 if black_is else -8)] = Pieces.Empty
-			if (end>>3)==(0 if black_is else 7):
-				_explicitly_move(move.cleaned())
-				const PROMOMAP = [Pieces.Queen, Pieces.Rook, Pieces.Bishop, Pieces.Knight]
-				self.board[end] = PROMOMAP[promo] | self.current_move
+				var old_pawn = end+(8 if black_is else -8)
+				explicit_moves.append(Move.new(old_pawn, old_pawn))
+			if (end>>3)==(0 if black_is else 7): #Promotion
+				explicit_moves.append(move.cleaned())
+				promod = true
+			if abs(end-start)==16: #Double Pawn Push
+				explicit_moves.append(move.cleaned())
+				self.en_passant = start+(-8 if black_is else 8)
+			else: explicit_moves.append(move.cleaned())
+		_:
+			explicit_moves.append(move.cleaned())
+			if self.board[end]&7==Pieces.Rook:
+				var captured_white = Helper.color_of_piece(self.board[end])==Pieces.White
+				if end==(7 if captured_white else 63): self.castling_rights &= 15-(0b10 << (int(not captured_white)*2))
+				elif end==(0 if captured_white else 56): self.castling_rights &= 15-(0b01 << (int(not captured_white)*2))
+	
+	if explicit_moves:
+		for mov in explicit_moves: _explicitly_move(mov)
+	
+	if promod: self.board[end] = PROMOMAP[promo] | self.current_move
+	
+	emit_signal("position_changed", explicit_moves, PROMOMAP[move.promo] if promod else -1)
+	current_move = Pieces.Black if current_move == Pieces.White else Pieces.White
+	return true
 
 func is_legal(move : Move) -> bool:
 	#Add legality logic
 	return true
 
-func _explicitly_move(move : Move):
+func _explicitly_move(move : Move): #If start and end are same, it deletes that square
+	if move.start_sq==move.end_sq:
+		self.board[move.start_sq] = Pieces.Empty
+		self.pindeces.erase(move.start_sq)
+		return
 	self.board[move.end_sq] = self.board[move.start_sq]
 	self.board[move.start_sq] = Pieces.Empty
+	if move.end_sq not in self.pindeces: self.pindeces.append(move.end_sq)
+	self.pindeces.erase(move.start_sq)

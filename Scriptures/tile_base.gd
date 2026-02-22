@@ -1,7 +1,7 @@
 class_name TileBase extends Area2D
 
 var board : Board
-var pos : int
+var pos_ : int
 
 func _ready() -> void:
 	$Hovered.hide()
@@ -17,13 +17,13 @@ func _mouse_exit() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and $Hovered.visible and event.pressed:
-			var piece = board.Game.board[pos]
+			var piece = board.Game.board[pos_]
 			
 			if Helper.is_empty(piece): return
 			if Helper.color_of_piece(piece) != board.Game.current_move: return
 			
-			board.emit_signal("clear_prev_select", pos)
+			board.emit_signal("clear_prev_select", pos_)
 			$Selected.visible = not $Selected.visible 
 
 func _on_clear_prev_select(post):
-	if pos != post: $Selected.hide()
+	if pos_ != post: $Selected.hide()
