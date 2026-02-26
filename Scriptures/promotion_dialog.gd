@@ -11,10 +11,10 @@ func _init(colour = 16) -> void:
 	color = colour
 
 func _ready() -> void:
-	$Options/Queen.pressed.connect(_queen)
-	$Options/Rook.pressed.connect(_rook)
-	$Options/Bishop.pressed.connect(_bishop)
-	$Options/Knight.pressed.connect(_knight)
+	$Options/Queen.toggled.connect(_queen)
+	$Options/Rook.toggled.connect(_rook)
+	$Options/Bishop.toggled.connect(_bishop)
+	$Options/Knight.toggled.connect(_knight)
 	order_up()
 
 func _queen():

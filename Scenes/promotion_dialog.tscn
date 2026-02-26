@@ -1,7 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://yxnx0jw6h84q"]
+[gd_scene load_steps=9 format=3 uid="uid://yxnx0jw6h84q"]
 
 [ext_resource type="Texture2D" uid="uid://40j2eejkjcim" path="res://Pieces/white/queen.png" id="1_h4hd5"]
 [ext_resource type="Script" uid="uid://ct46lur6apasy" path="res://Scriptures/promotion_dialog.gd" id="1_ru8cp"]
+[ext_resource type="StyleBox" uid="uid://cvnr2wtc65rxt" path="res://Resources/DoomBox.tres" id="2_2x0ik"]
+[ext_resource type="ButtonGroup" uid="uid://fatvp0bw0tdg" path="res://Resources/RadioGroup.tres" id="2_dwa8b"]
+[ext_resource type="StyleBox" uid="uid://dg71muk6h3j7g" path="res://Resources/OutlineStyleBox.tres" id="2_rxqgp"]
 [ext_resource type="Texture2D" uid="uid://bdt4xs14h83qn" path="res://Pieces/white/rook.png" id="2_wdqic"]
 [ext_resource type="Texture2D" uid="uid://uj8ksb8p3v8j" path="res://Pieces/white/bishop.png" id="3_ru8cp"]
 [ext_resource type="Texture2D" uid="uid://bxtp40es05k3a" path="res://Pieces/white/knight.png" id="4_dwa8b"]
@@ -27,23 +30,39 @@ theme_override_constants/separation = 10
 [node name="Queen" type="Button" parent="Options"]
 layout_mode = 2
 tooltip_text = "Queen"
+theme_override_styles/focus = ExtResource("2_2x0ik")
+theme_override_styles/pressed = ExtResource("2_rxqgp")
+toggle_mode = true
+button_group = ExtResource("2_dwa8b")
 icon = ExtResource("1_h4hd5")
 icon_alignment = 2
 
 [node name="Rook" type="Button" parent="Options"]
 layout_mode = 2
 tooltip_text = "Rook"
+theme_override_styles/focus = ExtResource("2_2x0ik")
+theme_override_styles/pressed = ExtResource("2_rxqgp")
+toggle_mode = true
+button_group = ExtResource("2_dwa8b")
 icon = ExtResource("2_wdqic")
 icon_alignment = 2
 
 [node name="Bishop" type="Button" parent="Options"]
 layout_mode = 2
 tooltip_text = "Bishop"
+theme_override_styles/focus = ExtResource("2_2x0ik")
+theme_override_styles/pressed = ExtResource("2_rxqgp")
+toggle_mode = true
+button_group = ExtResource("2_dwa8b")
 icon = ExtResource("3_ru8cp")
 icon_alignment = 2
 
 [node name="Knight" type="Button" parent="Options"]
 layout_mode = 2
 tooltip_text = "Knight"
+theme_override_styles/focus = ExtResource("2_2x0ik")
+theme_override_styles/pressed = ExtResource("2_rxqgp")
+toggle_mode = true
+button_group = ExtResource("2_dwa8b")
 icon = ExtResource("4_dwa8b")
 icon_alignment = 2

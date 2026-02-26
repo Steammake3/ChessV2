@@ -11,11 +11,19 @@ config_version=5
 [application]
 
 config/name="ChessV2"
-run/main_scene="uid://c1bkjj6xh2wks"
+run/main_scene="uid://cc6hixa7pvl26"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.10721, 0.297041, 0.54252, 1)

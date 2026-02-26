@@ -33,6 +33,7 @@ func new_tilebase_at(i, j, ts):
 	tile.name = "Tile%d" % (8*i+j)
 	tile.pos_ = int(8*i+j)
 	tile.board = self
+	#tile.call_deferred("set_scale", Vector2(ts/64, ts/64))
 	return tile
 
 func new_piece_at(i, j, ts, scalar = 1) -> PhysicalPiece:

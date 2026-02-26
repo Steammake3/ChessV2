@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc6hixa7pvl26"]
+
+[ext_resource type="PackedScene" uid="uid://c1bkjj6xh2wks" path="res://Scenes/board.tscn" id="1_jjgbg"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Board" parent="." instance=ExtResource("1_jjgbg")]
+position = Vector2(270, 270)
+TILE_SIZE = 64
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 543.0
+offset_right = 960.0
+offset_bottom = 540.0
+color = Color(0.0133333, 0, 0.1, 0.505882)

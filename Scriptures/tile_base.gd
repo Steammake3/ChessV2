@@ -3,6 +3,23 @@ class_name TileBase extends Area2D
 var board : Board
 var pos_ : int
 
+@onready var shape = $CollisionShape2D
+
+func set_size(ts):
+	var rect = shape.shape as RectangleShape2D
+	rect.size = Vector2(ts - 12, ts - 12) # keep margin similar to 52 vs 64
+
+	$Selected/Fill.offset_left = -ts/2
+	$Selected/Fill.offset_top = -ts/2
+	$Selected/Fill.offset_right = ts/2
+	$Selected/Fill.offset_bottom = ts/2
+
+	$Hovered.offset_left = -ts/2
+	$Hovered.offset_top = -ts/2
+	$Hovered.offset_right = ts/2
+	$Hovered.offset_bottom = ts/2
+	set_width(6*ts/64)
+
 func _ready() -> void:
 	$Hovered.hide()
 	$Selected.hide()
@@ -31,3 +48,6 @@ func _input(event: InputEvent) -> void:
 
 func _on_clear_prev_select(post):
 	if pos_ != post: $Selected.hide()
+
+func set_width(w):
+	$Selected/Outline.width=w
