@@ -131,12 +131,13 @@ func playmove(move : Move):
 			if Helper.kingly_dist(start, end)>1: #Castling
 				var kingside : bool = (end-start)>0
 				kingside = kingside != black_is
+				var cr = self.castling_rights
 				explicit_moves.append(move.cleaned())
 				match int(kingside)*2+int(black_is):
-					0: explicit_moves.append(Move.new(0,3))
-					3: explicit_moves.append(Move.new(56,59))
-					2: explicit_moves.append(Move.new(7,5))
-					1: explicit_moves.append(Move.new(63,61))
+					0: if (cr>>2)&1: explicit_moves.append(Move.new(0,3))
+					3: if (cr>>1)&1: explicit_moves.append(Move.new(56,59))
+					2: if (cr>>3)&1: explicit_moves.append(Move.new(7,5))
+					1: if (cr)&1: explicit_moves.append(Move.new(63,61))
 			else: explicit_moves.append(move.cleaned())
 		Pieces.Rook:
 			if start==(63 if black_is else 7): self.castling_rights &= 15-(0b10 << (int(black_is)*2))
@@ -159,10 +160,6 @@ func playmove(move : Move):
 			else: explicit_moves.append(move.cleaned())
 		_:
 			explicit_moves.append(move.cleaned())
-			if self.board[end]&7==Pieces.Rook:
-				var captured_white = Helper.color_of_piece(self.board[end])==Pieces.White
-				if end==(7 if captured_white else 63): self.castling_rights &= 15-(0b10 << (int(not captured_white)*2))
-				elif end==(0 if captured_white else 56): self.castling_rights &= 15-(0b01 << (int(not captured_white)*2))
 	
 	if explicit_moves:
 		for mov in explicit_moves: _explicitly_move(mov)
@@ -172,6 +169,7 @@ func playmove(move : Move):
 	
 	emit_signal("position_changed", explicit_moves, (PROMOMAP[promo] | self.current_move if promo!=13 else 0) if promod else -1)
 	current_move = Pieces.Black if current_move == Pieces.White else Pieces.White
+	_update_castling_rights()
 	return true
 
 func is_legal(move : Move) -> bool:
@@ -187,3 +185,23 @@ func _explicitly_move(move : Move): #If start and end are same, it deletes that 
 	self.board[move.start_sq] = Pieces.Empty
 	if move.end_sq not in self.pindeces: self.pindeces.append(move.end_sq)
 	self.pindeces.erase(move.start_sq)
+
+#func _check_take(end):
+	#if self.board[end]&7==Pieces.Rook:
+		#var captured_white = Helper.color_of_piece(self.board[end])==Pieces.White
+		#if end==(7 if captured_white else 63): self.castling_rights &= 15-(0b10 << (int(not captured_white)*2))
+		#elif end==(0 if captured_white else 56): self.castling_rights &= 15-(0b01 << (int(not captured_white)*2))
+
+func _update_castling_rights():
+	# White King side
+	if (self.board[7]&7)!=Pieces.Rook:  # h1
+		self.castling_rights &= 0b1110
+	# White Queen side
+	if (self.board[0]&7)!=Pieces.Rook:  # a1
+		self.castling_rights &= 0b1101
+	# Black King side
+	if (self.board[63]&7)!=Pieces.Rook: # h8
+		self.castling_rights &= 0b0011
+	# Black Queen side
+	if (self.board[56]&7)!=Pieces.Rook: # a8
+		self.castling_rights &= 0b1011

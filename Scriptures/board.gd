@@ -74,8 +74,8 @@ func _ready() -> void:
 
 func _on_position_changed(explicit_moves, promod):
 	if promod>0:
-		await move_piece(explicit_moves[0])
-		get_node("Pieces/At%d" % explicit_moves[0].end_sq).set_piece(promod)
+		var sp = await move_piece(explicit_moves[0])
+		sp.set_piece(promod)
 	elif promod==-1:
 		for move in explicit_moves: move_piece(move)
 	elif promod==0:
@@ -135,3 +135,4 @@ func move_piece(move : Move):
 		captured.queue_free()
 	
 	start_piece.call_deferred("set_name", "At%d" % move.end_sq)
+	return start_piece
