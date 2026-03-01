@@ -7,6 +7,7 @@ class_name Board extends Node2D
 @export var animation_time : float = 1.0
 @export var SZ_STRONG : float = 0.125
 @export var variable_speed : bool = true
+@export var promoter : Options
 
 const FEN : String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 const tiler = preload("res://Scenes/tile_base.tscn")
@@ -96,7 +97,7 @@ func _on_select_cleared(post):
 
 func _on_general_selection(post):
 	if selection!=-1:
-		Game.playmove(Move.new(selection, post))
+		Game.playmove(Move.new(selection, post, promoter.choice if promoter else 0))
 		emit_signal("clear_prev_select", -1)
 
 func move_piece(move : Move):
@@ -124,12 +125,13 @@ func move_piece(move : Move):
 	await tween.finished
 	var captured = get_node_or_null("Pieces/At%d" % move.end_sq)
 	var en_passnt = get_node_or_null("Pieces/AtEP")
-	if en_passnt:
+	
+	if move.start_sq==move.end_sq: start_piece.queue_free()
+	elif en_passnt:
 		if move.end_sq==en_passnt.en_passant_repr:
 			get_node("Pieces/AtEP").queue_free()
 	elif captured:
 		captured.name = "MeantToDie"
 		captured.queue_free()
 	
-	if move.start_sq==move.end_sq: start_piece.queue_free()
-	start_piece.name = "At%d" % move.end_sq
+	start_piece.call_deferred("set_name", "At%d" % move.end_sq)

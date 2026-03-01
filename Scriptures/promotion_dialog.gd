@@ -6,8 +6,9 @@ const Pieces = PhysicalPiece.Pieces
 
 var color : int
 signal chosen(choosed)
+var choice : int = 0
 
-func _init(colour = 16) -> void:
+func _init(colour = 8) -> void:
 	color = colour
 
 func _ready() -> void:
@@ -15,18 +16,19 @@ func _ready() -> void:
 	$Options/Rook.toggled.connect(_rook)
 	$Options/Bishop.toggled.connect(_bishop)
 	$Options/Knight.toggled.connect(_knight)
+	chosen.connect(_update_choice)
 	order_up()
 
-func _queen():
+func _queen(x):
 	emit_signal("chosen", 0)
 
-func _rook():
+func _rook(x):
 	emit_signal("chosen", 1)
 
-func _bishop():
+func _bishop(x):
 	emit_signal("chosen", 2)
 
-func _knight():
+func _knight(x):
 	emit_signal("chosen", 3)
 	
 func order_up():
@@ -39,3 +41,6 @@ func order_up():
 		#Ordering
 		for i in range(0,4):
 			$Options.move_child(littlekids[i], 3-i)
+
+func _update_choice(chose):
+	choice = chose
